@@ -31,7 +31,7 @@ if (process.env.SENTRY_DSN)
     autoBreadcrumbs: true
   }).install()
 
-morgan.token('fwd', (req) => req.get('x-forwarded-for').replace(/\s/g, ''))
+morgan.token('fwd', (req) => (req.get('x-forwarded-for')||'').replace(/\s/g, ''))
 
 const createServer = (config) => {
   const app = express()
