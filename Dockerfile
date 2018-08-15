@@ -2,6 +2,10 @@ FROM node:alpine
 
 RUN apk update
 RUN apk add redis
+
+RUN apk add --update curl && \
+    rm -rf /var/cache/apk/*
+
 ENV OPENREDIS_URL redis://localhost:6379
 RUN npm -g install yarn
 
