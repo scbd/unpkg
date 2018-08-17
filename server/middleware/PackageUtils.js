@@ -7,7 +7,8 @@ const decodeParam = (param) =>
 
 const ValidQueryKeys = {
   main: true,
-  json: true
+  json: true,
+  v:true
 }
 
 const queryIsValid = (query) =>
