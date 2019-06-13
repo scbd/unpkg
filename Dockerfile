@@ -6,7 +6,7 @@ RUN apk update
 RUN apk add --update curl && \
     rm -rf /var/cache/apk/*
 
-ENV OPENREDIS_URL redis://localhost:6379
+# ENV OPENREDIS_URL redis://localhost:6379
 RUN npm -g install yarn
 
 WORKDIR /app
