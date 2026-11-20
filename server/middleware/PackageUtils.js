@@ -1,5 +1,3 @@
-const { parse: parseURL } = require('url')
-
 const URLFormat = /^\/((?:@[^\/@]+\/)?[^\/@]+)(?:@([^\/]+))?(\/.*)?$/
 
 const decodeParam = (param) =>
@@ -15,7 +13,10 @@ const queryIsValid = (query) =>
   Object.keys(query).every(key => ValidQueryKeys[key])
 
 const parsePackageURL = (url) => {
-  const { pathname, search, query } = parseURL(url, true)
+  // Prefix a fixed origin instead of passing a base URL so that a request
+  // path starting with "//" is never treated as a host name.
+  const { pathname, search, searchParams } = new URL(`http://localhost${url}`)
+  const query = Object.fromEntries(searchParams)
 
   if (!queryIsValid(query))
     return null
