@@ -6,7 +6,8 @@
     "build": "node scripts/build.js",
     "heroku-postbuild": "node scripts/build.js",
     "server": "heroku local -f Procfile.local -p 3001",
-    "test": "node scripts/test.js --env=jsdom"
+    "test": "node --test \"test/**/*.test.js\"",
+    "test:jest": "node scripts/test.js --env=jsdom"
   },
   "engines": {
     "node": "^22.23.4 || ^24.22.1 || >=26.12.1"
