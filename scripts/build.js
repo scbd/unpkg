@@ -16,7 +16,6 @@ require('dotenv').config({silent: true});
 var chalk = require('chalk');
 var fs = require('fs-extra');
 var path = require('path');
-var url = require('url');
 var webpack = require('webpack');
 var config = require('../config/webpack.config.prod');
 var paths = require('../config/paths');
@@ -86,7 +85,7 @@ function build(previousFileSizes) {
     var appPackage  = require(paths.appPackageJson);
     var publicUrl = paths.publicUrl;
     var publicPath = config.output.publicPath;
-    var publicPathname = url.parse(publicPath).pathname;
+    var publicPathname = new URL(publicPath, 'http://localhost').pathname;
     if (publicUrl && publicUrl.indexOf('.github.io/') !== -1) {
       // "homepage": "http://user.github.io/project"
       console.log('The project was built assuming it is hosted at ' + chalk.green(publicPathname) + '.');

@@ -1,4 +1,4 @@
-require('isomorphic-fetch')
+const { Readable } = require('stream')
 const gunzip = require('gunzip-maybe')
 const mkdirp = require('mkdirp')
 const tar = require('tar-fs')
@@ -73,10 +73,15 @@ const getPackage = (tarballURL, outputDir, callback) => {
     } else {
       let callbackWasCalled = false
 
+      // Uses the global (WHATWG) fetch built into Node >= 18. Its body is a
+      // web ReadableStream, so convert it to a Node stream before piping.
       fetch(tarballURL, {
         headers: authHeader
       }).then(response => {
-        response.body
+        if (!response.ok)
+          throw new Error(`Unable to fetch ${tarballURL}: HTTP ${response.status}`)
+
+        Readable.fromWeb(response.body)
           .pipe(gunzip())
           .pipe(
             tar.extract(outputDir, {
@@ -93,6 +98,12 @@ const getPackage = (tarballURL, outputDir, callback) => {
             callbackWasCalled = true
             callback(error)
           })
+      }).catch(error => {
+        if (callbackWasCalled)
+          return
+
+        callbackWasCalled = true
+        callback(error)
       })
     }
   })
